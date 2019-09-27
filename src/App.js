@@ -3,10 +3,23 @@ import "./App.css";
 import carfix from "./carfix.jpg";
 import axios from "axios";
 
-function App() {
+function App({history}) {
   const [number, setNumber] = React.useState(null);
   const [message, setMessage] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+
+  function sendMessage() {
+    setLoading(true)
+    axios.post("http://localhost:4000/api/message", {number, message})
+    .then(res => {
+      console.log({res})
+      history.push("/success");
+    })
+      .catch(err => {
+        console.log(err)
+        setLoading(false)
+      })
+  }
 
   return (
     <div
@@ -44,6 +57,7 @@ function App() {
       <button
         disabled={loading || !message.trim() || !number}
         className={`${loading && "is-loading"} is-warning button`}
+        onClick={sendMessage}
       >
         Button
       </button>
